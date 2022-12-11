@@ -1,0 +1,46 @@
+plugins {
+  id 'base'
+  id 'com.github.node-gradle.node' version '2.2.4'
+}
+
+configurations {
+  antora
+}
+
+node {
+  // Version of node to use.
+  version = '12.18.2'
+  download = true
+}
+
+def siteOutputDir = "${buildDir}/site";
+def localAntoraContent = project.hasProperty('localAntoraContent');
+
+task generateDocs(type: NpxTask) {
+  dependsOn npmInstall
+  dependsOn ':antora-ui:build'
+
+  inputs.files('package.json', 'package-lock.json', 'antora-playbook.yml', '*.yml')
+  inputs.dir(fileTree('node_modules').exclude('.cache'))
+  outputs.dir(siteOutputDir)
+
+  command = 'antora'
+
+  if (localAntoraContent) {
+    args = ['antora-playbook-local.yml', '--stacktrace']
+  } else {
+    args = ['antora-playbook.yml', '--stacktrace']
+  }
+}
+
+task copySomeFiles(type: Copy) {
+  dependsOn generateDocs
+  from 'src/main/asf'
+  into siteOutputDir
+}
+
+task buildSite() {
+  dependsOn generateDocs, copySomeFiles
+}
+
+tasks.build.dependsOn buildSite

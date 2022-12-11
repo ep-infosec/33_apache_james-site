@@ -1,0 +1,4 @@
+rootProject.name = 'james-site'
+
+include ':antora-ui'
+include ':doc-sites'

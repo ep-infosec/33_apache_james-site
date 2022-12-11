@@ -1,0 +1,22 @@
+#
+# Use this configuration for local testing / docs develop.
+# You should clone all James repositories in the same place.
+#
+site:
+  title: Apache James
+  url: https://james.apache.org/
+  start_page: james-site::homepage.adoc
+content:
+  sources:
+    - url: ./../../james-project
+      branches: HEAD
+      start_path: docs
+    - url: ./../
+      branches: HEAD
+      start_path: docs
+ui:
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
+  supplemental_files: ./ui-overrides
+runtime:
+  fetch: true
